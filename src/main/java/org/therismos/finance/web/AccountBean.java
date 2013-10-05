@@ -1,5 +1,6 @@
 package org.therismos.finance.web;
 
+import com.google.gson.Gson;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -31,6 +32,11 @@ public class AccountBean {
     
     public java.util.List<Account> getAccounts() {
         return dao.getAccounts();
+    }
+    
+    public String getAccountsAsJson() {
+        Gson gson = new Gson();
+        return gson.toJson(dao.getAccounts());
     }
     
     public String edit() {
