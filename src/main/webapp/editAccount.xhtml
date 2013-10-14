@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <title>Therismos Account</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel for="id" value="Id"/>
+                <h:inputText id="id" value="#{accountBean.selectedAccount.id}"/>
+                <h:outputLabel for="code" value="Code"/>
+                <h:inputText id="code" value="#{accountBean.selectedAccount.code}"/>
+                <h:outputLabel for="name" value="Name"/>
+                <h:inputText id="name" value="#{accountBean.selectedAccount.name}"/>
+                <h:outputLabel for="name_chi" value="Name in Chinese"/>
+                <h:inputText id="name_chi" value="#{accountBean.selectedAccount.name_chi}"/>
+            </h:panelGrid>
+            <h:commandButton value="Update" accesskey="u" action="#{accountBean.save}"/>
+        </h:form>
+        <h:outputLink value="accounts.jsf">Accounts</h:outputLink>
+    </h:body>
+</html>
