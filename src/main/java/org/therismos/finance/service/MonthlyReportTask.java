@@ -16,11 +16,9 @@ import org.therismos.finance.model.Transaction;
  *
  * @author cpliu
  */
-@javax.ejb.Stateless
+//@javax.ejb.Stateless
 public class MonthlyReportTask implements Runnable, java.io.Serializable {
-    @javax.ejb.EJB
     private MongoDao mongoDao;
-    @javax.ejb.EJB
     private AccountService accountService;
 
     public static final long serialVersionUID = 8634594537L;
