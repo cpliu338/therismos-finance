@@ -265,6 +265,13 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
 
     @Override
     public void run() {
+        try {
+            translate.load(MonthlyReportTask.class.getResourceAsStream("/config.properties"));
+        } catch (Exception ex) {
+            Logger.getLogger(MonthlyReportTask.class.getName()).log(Level.SEVERE, null, ex);
+            message = "Cannot load config";
+            return;
+        }
         message = "Downloading transactions up to "+cutoffDate;
         logger.info(message);
         downloadTransactions(level, cutoffDate);
