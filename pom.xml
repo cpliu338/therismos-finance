@@ -177,8 +177,15 @@
             <artifactId>primefaces</artifactId>  
             <version>3.5</version>  
         </dependency>        
-
    </dependencies>
+    <repositories>
+        <repository>
+        <id>prime-repo</id>  
+        <name>PrimeFaces Maven Repository</name>  
+        <url>http://repository.primefaces.org</url>  
+        <layout>default</layout>  
+        </repository>
+    </repositories>
 
    <build>
       <!-- Maven will append the version to the finalName (which is the name 
