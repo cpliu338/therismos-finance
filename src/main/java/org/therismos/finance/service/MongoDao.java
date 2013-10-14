@@ -20,9 +20,15 @@ public class MongoDao {
     DB db;
     DBCollection collection;
     boolean auth;
+    ArrayList<Account> results;
+    
+    public MongoDao() {
+        results = new ArrayList<Account>();
+    }
     
     @javax.annotation.PostConstruct
     public void init() {
+        results.clear();
         try {
 //            mongoClient = new MongoClient();
             mongoClient = new MongoClient("ds043358.mongolab.com", 43358);
@@ -33,21 +39,40 @@ public class MongoDao {
             collection.setObjectClass(Account.class);
         } catch (UnknownHostException ex) {
             Logger.getLogger(MongoDao.class.getName()).log(Level.SEVERE, null, ex);
+            return;
         }
+        Iterator<DBObject> it = collection.find().sort(new BasicDBObject("id",1)).iterator();
+        while (it.hasNext()) {
+            results.add((Account)it.next());
+        }
+    }
+    
+    public Account getAccountByCode(String code) {
+        for (Account a : results) {
+            if (a.getCode().equals(code)) return a;
+        }
+        return null;
     }
     
     public Account getAccountById(int id) {
-        return (Account)collection.findOne();
+        for (Account a : results) {
+            if (id == a.getId()) return a;
+        }
+        return null;
     }
     
     public java.util.List<Account> getAccounts() {
-        ArrayList<Account> results = new ArrayList<Account>();
-        Iterator<DBObject> it = collection.find().sort(new BasicDBObject("id",1)).iterator();
-        while (it.hasNext()) {
-            //convertToModel(raw);
-            results.add((Account)it.next());
-        }
         return results;
+    }
+    
+    public List<DBObject> getAccountsBelow(String summaryCode) throws UnknownHostException {
+//        mongoClient = new MongoClient("ds043358.mongolab.com", 43358);
+//        db = mongoClient.getDB("therismos");
+//        auth = db.authenticate("therismos","26629066".toCharArray());
+//        if (!auth) return Collections.EMPTY_LIST;
+        DBObject match = new BasicDBObject("code", new BasicDBObject("$regex", "^"+summaryCode) );
+        DBCursor cursor = collection.find(match);
+        return cursor.toArray();
     }
 
     public Account convertToModel(DBObject raw) {

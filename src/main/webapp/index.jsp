@@ -5,9 +5,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Therismos Finance</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <ul>
+            <li><a href="accounts.jsf">Accounts</a></li>
+            <li><a href="transactions.jsf">Transactions</a></li>
+        </u1>
     </body>
 </html>
