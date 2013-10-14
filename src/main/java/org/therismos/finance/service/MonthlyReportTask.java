@@ -16,11 +16,9 @@ import org.therismos.finance.model.Transaction;
  *
  * @author cpliu
  */
-@javax.ejb.Stateless
+//@javax.ejb.Stateless
 public class MonthlyReportTask implements Runnable, java.io.Serializable {
-    @javax.ejb.EJB
     private MongoDao mongoDao;
-    @javax.ejb.EJB
     private AccountService accountService;
 
     public static final long serialVersionUID = 8634594537L;
@@ -267,6 +265,13 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
 
     @Override
     public void run() {
+        try {
+            translate.load(MonthlyReportTask.class.getResourceAsStream("/config.properties"));
+        } catch (Exception ex) {
+            Logger.getLogger(MonthlyReportTask.class.getName()).log(Level.SEVERE, null, ex);
+            message = "Cannot load config";
+            return;
+        }
         message = "Downloading transactions up to "+cutoffDate;
         logger.info(message);
         downloadTransactions(level, cutoffDate);

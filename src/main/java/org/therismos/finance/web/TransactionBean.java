@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.therismos.finance.model.Transaction;
@@ -16,19 +17,20 @@ import org.therismos.finance.service.MonthlyReportTask;
  *
  * @author cpliu
  */
-@javax.faces.bean.ViewScoped
-@javax.faces.bean.ManagedBean
+//@javax.faces.bean.ViewScoped
+@javax.inject.Named
+@SessionScoped
 public class TransactionBean implements java.io.Serializable {
     
-    @javax.ejb.EJB
+    @javax.inject.Inject
     private AccountService accountService;
-    @javax.ejb.EJB
+    @javax.inject.Inject
     private MongoDao mongoDao;
     
     private java.util.List<Transaction> transactions;
     private MonthlyReportTask task;
     private java.util.Date cutoffDate;
-    public static final long serialVersionUID = 670345243L;
+    //public static final long serialVersionUID = 670345243L;
     
     public TransactionBean() {
         transactions = new java.util.ArrayList<Transaction> ();
