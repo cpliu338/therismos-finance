@@ -9,12 +9,12 @@ import java.util.logging.Logger;
 import org.therismos.finance.model.Account;
 
 /**
- *
+ * A dao to retrieve data from mongolab, which keeps "accounts" as a collection
  * @author cpliu
  */
-@javax.ejb.Startup
-@javax.ejb.Singleton
-public class MongoDao {
+//@javax.ejb.Startup
+@javax.inject.Singleton
+public class MongoDao implements java.io.Serializable {
     
     MongoClient mongoClient;
     DB db;

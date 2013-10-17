@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,7 +20,11 @@ import org.therismos.finance.model.Transaction;
  */
 //@javax.ejb.Stateless
 public class MonthlyReportTask implements Runnable, java.io.Serializable {
+    
+    //@Inject
     private MongoDao mongoDao;
+    
+    //@Inject @RemoteServer
     private AccountService accountService;
 
     public static final long serialVersionUID = 8634594537L;
