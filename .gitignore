@@ -1,3 +1,4 @@
 .project
 pom.xml
 nb-configuration.xml
+/.openshift/
