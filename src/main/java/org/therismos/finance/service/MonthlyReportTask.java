@@ -85,28 +85,24 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
         message = "Task prepared";
         error = "";
     }
-
-    private boolean BuildBalanceSheet() {
+    
+    private void BuildPageTop(String format) {
         grandtotal[0]=0.0;
         grandtotal[1]=0.0;
         sheet.setColumnWidth(0, 24*256);
         sheet.setColumnWidth(1, 18*256);
         sheet.setColumnWidth(2, 18*256);
-        List<DBObject> accounts;
-        rowno=0;
-        Row row=sheet.createRow(rowno);
+        Row row=sheet.createRow(0);
         Cell cell = row.createCell(0);
         cell.setCellValue(translate.getProperty(prefix+"header", "Church Name"));
         cell.setCellStyle(this.styleHeader1);
-        sheet.addMergedRegion(new CellRangeAddress(rowno,rowno,0,2));
-        rowno+=2;
-        row = sheet.createRow(rowno);
+        sheet.addMergedRegion(new CellRangeAddress(0,0,0,2));
+        row = sheet.createRow(2);
         cell = row.createCell(0);
-        cell.setCellValue("");//MessageFormat.format(translate.getProperty("format.cut-off-date"), this.cutoffDate));
+        cell.setCellValue(MessageFormat.format(format, this.cutoffDate));
         cell.setCellStyle(this.styleHeader2);
-        sheet.addMergedRegion(new CellRangeAddress(rowno,rowno,0,2));
-        rowno+=2;
-        row = sheet.createRow(rowno++);
+        sheet.addMergedRegion(new CellRangeAddress(2,2,0,2));
+        row = sheet.createRow(4);
         cell = row.createCell(0);
         cell.setCellValue(translate.getProperty(prefix+ "account", "account"));
         cell.setCellStyle(this.styleBoldText);
@@ -116,7 +112,7 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
         cell = row.createCell(2);
         cell.setCellValue("CR");
         cell.setCellStyle(this.styleBoldText);
-        row = sheet.createRow(rowno++);
+        row = sheet.createRow(5);
         cell = row.createCell(0);
         cell.setCellValue(" ");
         cell.setCellStyle(this.styleBoldText);
@@ -126,7 +122,17 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
         cell = row.createCell(2);
         cell.setCellValue("$");
         cell.setCellStyle(this.styleBoldText);
+        
+    }
+
+    private boolean BuildBalanceSheet () {
+        BuildPageTop(translate.getProperty("format.cut-off-date2"));
+        List<DBObject> accounts;
+        rowno=6;
+        Row row;// = sheet.createRow(rowno++);
+        Cell cell;
         String[] types = {"1","2","3"};
+        //String [] codes = {"110","1110","1120","120","1310","1320","190","210","220","230","30"};
         message = "Scanning subtypes";
         logger.info(message);
         for (String subtype : types) {
@@ -145,10 +151,11 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
 //                logger.log(Level.INFO, "{0} : {1}",
 //                new Object[] {code, totals.get(code)});
             }
-            Account summary = mongoDao.getAccountByCode(subtype+"0");
+            // Balance sheet summary limited to 10, 20, 30
+            Account summary = mongoDao.getAccountByCode(subtype.substring(0,1) +"0");
             row = sheet.createRow(rowno++);
             cell = row.createCell(0);
-            cell.setCellValue(summary.getDetail());
+            cell.setCellValue(summary==null ? "null" : summary.getDetail() );
             cell.setCellStyle(styleBoldText);
             if (size==1) {
                 double tot = totals.get((String)(accounts.get(0).get("code")));
@@ -174,7 +181,7 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
                 }
             }
             if (size>1) {
-                logger.log(Level.FINE, "more than 1");
+//                logger.log(Level.FINE, "more than 1");
                 cell = row.createCell(1);
                 cell.setCellValue("");
                 cell.setCellStyle(styleText);
@@ -255,49 +262,11 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
     }
     
     private boolean BuildPandL() {
-        grandtotal[0]=0.0;
-        grandtotal[1]=0.0;
-        sheet.setColumnWidth(0, 24*256);
-        sheet.setColumnWidth(1, 18*256);
-        sheet.setColumnWidth(2, 18*256);
+        BuildPageTop(translate.getProperty("format.cut-off-date"));
         List<DBObject> accounts;
-        //downloadTransactions(2, "2013-01-10");
-        totals = accountService.getTotals();
-        if (totals==null)
-            logger.info("NULL!!!");
-        rowno=0;
-        Row row=sheet.createRow(rowno);
-        Cell cell = row.createCell(0);
-        cell.setCellValue(translate.getProperty(prefix+"header", "Church Name"));
-        cell.setCellStyle(this.styleHeader1);
-        sheet.addMergedRegion(new CellRangeAddress(rowno,rowno,0,2));
-        rowno+=2;
-        row = sheet.createRow(rowno);
-        cell = row.createCell(0);
-        cell.setCellValue(MessageFormat.format(translate.getProperty("format.cut-off-date"), this.cutoffDate));
-        cell.setCellStyle(this.styleHeader2);
-        sheet.addMergedRegion(new CellRangeAddress(rowno,rowno,0,2));
-        rowno+=2;
-        row = sheet.createRow(rowno++);
-        cell = row.createCell(0);
-        cell.setCellValue(translate.getProperty(prefix+ "account", "account"));
-        cell.setCellStyle(this.styleBoldText);
-        cell = row.createCell(1);
-        cell.setCellValue("DB");
-        cell.setCellStyle(this.styleBoldText);
-        cell = row.createCell(2);
-        cell.setCellValue("CR");
-        cell.setCellStyle(this.styleBoldText);
-        row = sheet.createRow(rowno++);
-        cell = row.createCell(0);
-        cell.setCellValue(" ");
-        cell.setCellStyle(this.styleBoldText);
-        cell = row.createCell(1);
-        cell.setCellValue("$");
-        cell.setCellStyle(this.styleBoldText);
-        cell = row.createCell(2);
-        cell.setCellValue("$");
-        cell.setCellStyle(this.styleBoldText);
+        rowno = 6;
+        Row row;// = sheet.createRow(rowno++);
+        Cell cell;
         String[] types = {"41","51","42","52","46","56"};
         message = "Scanning subtypes";
         logger.info(message);
@@ -451,6 +420,7 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
         message = "Downloading transactions up to "+cutoffDate;
         logger.info(message);
         downloadTransactions(level, cutoffDate);
+        totals = accountService.getTotals();
         sheet = workbook.createSheet("P and L");
         if (!BuildPandL()) return;
         sheet = workbook.createSheet("Balance Sheet");
