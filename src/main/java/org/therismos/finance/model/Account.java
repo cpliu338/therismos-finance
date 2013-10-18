@@ -28,6 +28,11 @@ public class Account implements DBObject {
     private String name_chi;
     private String detail;
     
+    @Override
+    public String toString() {
+        return String.format("%s : %s (%s)", code, name_chi, detail);
+    }
+    
     public Account(int id, String name) {
         this.id=id; this.name=name;
     }

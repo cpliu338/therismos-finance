@@ -12,6 +12,7 @@ import org.therismos.finance.model.Transaction;
 import org.therismos.finance.service.AccountService;
 import org.therismos.finance.service.MongoDao;
 import org.therismos.finance.service.MonthlyReportTask;
+import org.therismos.finance.service.RemoteServer;
 
 /**
  *
@@ -22,7 +23,7 @@ import org.therismos.finance.service.MonthlyReportTask;
 @SessionScoped
 public class TransactionBean implements java.io.Serializable {
     
-    @javax.inject.Inject
+    @javax.inject.Inject @RemoteServer
     private AccountService accountService;
     @javax.inject.Inject
     private MongoDao mongoDao;
