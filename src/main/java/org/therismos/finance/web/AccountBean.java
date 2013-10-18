@@ -3,6 +3,7 @@ package org.therismos.finance.web;
 import com.google.gson.Gson;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -15,10 +16,10 @@ import org.therismos.finance.service.MongoDao;
  * @author cpliu
  */
 //@Named(value = "accountBean")
-@javax.faces.bean.ManagedBean
-@javax.faces.bean.SessionScoped
+@javax.inject.Named
+@SessionScoped
 public class AccountBean {
-    @javax.ejb.EJB
+    @javax.inject.Inject
     private MongoDao dao;
     
     private int key;
