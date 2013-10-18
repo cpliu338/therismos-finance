@@ -18,7 +18,7 @@ import org.therismos.finance.service.MongoDao;
 //@Named(value = "accountBean")
 @javax.inject.Named
 @SessionScoped
-public class AccountBean {
+public class AccountBean implements java.io.Serializable {
     @javax.inject.Inject
     private MongoDao dao;
     
