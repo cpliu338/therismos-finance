@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <description>MySQL 5.1 database added.  Please make note of these credentials:
+
+   Root User: admindkrYGd6
+   Root Password: zMSvxUa4fmNX
+   Database Name: finance
+
+Connection URL: mysql://$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/</description>
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
@@ -14,11 +21,29 @@
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>120</session-timeout>
     </session-config>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    <security-constraint>
+        <display-name>Constraint1</display-name>
+        <web-resource-collection>
+            <web-resource-name>Administrator</web-resource-name>
+            <description/>
+            <url-pattern>/accounts.jsf</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Administrator</description>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>file</realm-name>
+    </login-config>
+    <security-role>
+        <description/>
+        <role-name>admin</role-name>
+    </security-role>
 </web-app>
