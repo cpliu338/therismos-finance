@@ -12,7 +12,7 @@
             <p><h:outputText value="#{transactionBean.progress}"/></p>
             <h:commandButton value="Refresh" action="#{transactionBean.refresh}"/>
             <p:calendar pattern="yyyy-MM-dd" value="#{transactionBean.cutoffDate}"/>
-            <h:commandButton value="Execute" action="#{transactionBean.exec}"/>
+            <h:commandButton disabled="#{transactionBean.taskRunning}" value="Execute" action="#{transactionBean.exec}"/>
         </h:form>
     </h:body>
 </html>

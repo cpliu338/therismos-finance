@@ -20,7 +20,7 @@ import org.therismos.finance.service.RemoteServer;
  */
 //@javax.faces.bean.ViewScoped
 @javax.inject.Named
-@SessionScoped
+@javax.enterprise.context.ApplicationScoped
 public class TransactionBean implements java.io.Serializable {
     
     @javax.inject.Inject @RemoteServer
@@ -30,17 +30,22 @@ public class TransactionBean implements java.io.Serializable {
     
     private java.util.List<Transaction> transactions;
     private MonthlyReportTask task;
+    private Thread runner;
     private java.util.Date cutoffDate;
     //public static final long serialVersionUID = 670345243L;
     
     public TransactionBean() {
         transactions = new java.util.ArrayList<Transaction> ();
         cutoffDate = new java.util.Date();
-        task = new MonthlyReportTask();
+        runner = null;
+    }
+    
+    public boolean isTaskRunning() {
+        return runner!=null && runner.isAlive();
     }
     
     public String getProgress() {
-        return task.getMessage();
+        return task==null ? "Task not running" : task.getMessage();
     }
     
     public String refresh() {
@@ -54,13 +59,15 @@ public class TransactionBean implements java.io.Serializable {
     }
    
     public String exec() {
+        if (this.isTaskRunning()) return null;
+        task = new MonthlyReportTask();
         task.setAccountService(accountService);
         task.setMongoDao(mongoDao);
         task.setLevel(3);
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         task.setCutoffDate(fmt.format(cutoffDate));
         //serv.setUrlTransactionsPattern("http://localhost/ChurchAdmin/trans.json");
-        Thread runner = new Thread(task);
+        runner = new Thread(task);
         runner.start();
         //Thread.sleep(3000);
         return null;
