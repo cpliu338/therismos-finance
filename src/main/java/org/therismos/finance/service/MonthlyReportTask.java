@@ -55,11 +55,11 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
     
     public static final String prefix="legend.";
     public static final String tmpfolder = "/tmp";
+    public static final java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss");
     
     static final Logger logger = Logger.getLogger(MonthlyReportTask.class.getName());
     
     public static File timestampedWorkbook() {
-        java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("yyyyMMdd_hhmmss");
         return new File(new File(tmpfolder), String.format("Rep%s.xlsx",fmt.format(new java.util.Date())));
     }
     

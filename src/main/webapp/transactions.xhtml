@@ -1,19 +1,33 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Therismos Accounts</title>
+        <title>Therismos Monthly Report</title>
     </h:head>
     <h:body>
+        <h1>Therismos Monthly Report</h1>
         <h:messages />
-        <h:form>
-            <p><h:outputText value="#{transactionBean.progress}"/></p>
-            <h:commandButton value="Refresh" action="#{transactionBean.refresh}"/>
+        <h:form id="form">
+            <p><h:outputText id="progress" value="#{transactionBean.progress}"/></p>
+            <!--h:commandButton value="Refresh" action="# transactionBean.refresh}"/-->
             <p:calendar pattern="yyyy-MM-dd" value="#{transactionBean.cutoffDate}"/>
             <h:commandButton disabled="#{transactionBean.taskRunning}" value="Execute" action="#{transactionBean.exec}"/>
+            <p:poll interval="5" listener="#{transactionBean.refresh}" update=":form2 :form"/>
         </h:form>
+        <h:form id="form2">
+            <dl>
+                <dt>Available reports</dt>
+            <ui:repeat value="#{reportFileDownload.reports}" var="fname">
+                <dd><p:commandLink id="downloadLink" ajax="false">
+                    <h:outputText value="#{fname}"/>
+                    <f:setPropertyActionListener target="#{reportFileDownload.fname}" value="#{fname}"/>
+                    <p:fileDownload value="#{reportFileDownload.file}" />  
+                </p:commandLink>  </dd>
+            </ui:repeat>
+            </dl>
+        </h:form>  
     </h:body>
 </html>
 
