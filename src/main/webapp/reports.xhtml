@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Therismos Account Reports</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <ui:repeat value="#{reportFileDownload.reports}" var="fname">
+                <p:commandButton id="downloadLink" value="#{fname}" ajax="false">
+                    <f:setPropertyActionListener target="#{reportFileDownload.fname}" value="#{fname}"/>
+                    <p:fileDownload value="#{reportFileDownload.file}" />  
+                </p:commandButton>  <br/>
+            </ui:repeat>
+        </h:form>  
+    </h:body>
+</html>
+
