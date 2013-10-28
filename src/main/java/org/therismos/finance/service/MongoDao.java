@@ -47,6 +47,16 @@ public class MongoDao implements java.io.Serializable {
         }
     }
     
+    public Object getConfig(String key) {
+        try {
+//            auth = db.authenticate("therismos","26629066".toCharArray());
+            return db.getCollection("config").findOne(new BasicDBObject("key",key)).get("value");
+        }
+        catch (Exception npe) {
+            return npe;
+        }
+    }
+    
     public Account getAccountByCode(String code) {
         for (Account a : results) {
             if (a.getCode().equals(code)) return a;

@@ -31,7 +31,7 @@ Connection URL: mysql://$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/</desc
         <web-resource-collection>
             <web-resource-name>Administrator</web-resource-name>
             <description/>
-            <url-pattern>/accounts.jsf</url-pattern>
+            <url-pattern>/reports.jsf</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description>Administrator</description>

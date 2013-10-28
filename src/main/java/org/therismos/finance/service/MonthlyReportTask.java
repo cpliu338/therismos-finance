@@ -149,22 +149,20 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
                 Logger.getLogger(MonthlyReportTask.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
-            int size = 0;
             for (DBObject obj : accounts) {
                 // obj is in fact Account
                 String code= (String)obj.get("code"); 
-                size++;
-//                logger.log(Level.INFO, "{0} : {1}",
-//                new Object[] {code, totals.get(code)});
-            }
+                String name= (String)obj.get("name_chi"); 
             // Balance sheet summary limited to 10, 20, 30
-            Account summary = mongoDao.getAccountByCode(subtype.substring(0,1) +"0");
-            row = sheet.createRow(rowno++);
-            cell = row.createCell(0);
-            cell.setCellValue(summary==null ? "null" : summary.getDetail() );
-            cell.setCellStyle(styleBoldText);
-            if (size==1) {
-                double tot = totals.get((String)(accounts.get(0).get("code")));
+//            Account summary = mongoDao.getAccountByCode(subtype.substring(0,1) +"0");
+                Double tot = totals.get(code);//(String)(accounts.get(0).get("code")));
+                if (tot == null || (tot > -0.001 && tot < 0.001)) continue;
+                row = sheet.createRow(rowno++);
+                cell = row.createCell(0);
+    //            cell.setCellValue(summary==nulfl ? "null" : summary.getDetail() );
+                cell.setCellValue(name);
+                cell.setCellStyle(styleText);
+//            if (size==1) {
                 if (isIncome(subtype))
                     grandtotal[0] += tot;
                 else
@@ -172,7 +170,7 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
                 if (tot < 0) {
                     cell = row.createCell(1);
                     cell.setCellValue(0.0-tot);
-                    cell.setCellStyle(styleBoldEntry);
+                    cell.setCellStyle(styleEntry);
                     cell = row.createCell(2);
                     cell.setCellValue("");
                     cell.setCellStyle(styleText);
@@ -183,41 +181,7 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
                     cell.setCellStyle(styleText);
                     cell = row.createCell(2);
                     cell.setCellValue(tot);
-                    cell.setCellStyle(styleBoldEntry);
-                }
-            }
-            if (size>1) {
-//                logger.log(Level.FINE, "more than 1");
-                cell = row.createCell(1);
-                cell.setCellValue("");
-                cell.setCellStyle(styleText);
-                cell = row.createCell(2);
-                cell.setCellValue("");
-                cell.setCellStyle(styleText);
-                rowno = this.processEntry(accounts, rowno);
-                if (isIncome(subtype))
-                    grandtotal[0] += accum;
-                else
-                    grandtotal[1] -= accum;
-                row = sheet.createRow(rowno++);
-                cell = row.createCell(0);
-                cell.setCellValue(" ");
-                cell.setCellStyle(styleText);
-                if (accum < 0) {
-                    cell = row.createCell(1);
-                    cell.setCellValue(0.0-accum);
-                    cell.setCellStyle(styleSummary);
-                    cell = row.createCell(2);
-                    cell.setCellValue(" ");
-                    cell.setCellStyle(styleText);
-                }
-                else {
-                    cell = row.createCell(1);
-                    cell.setCellValue(" ");
-                    cell.setCellStyle(styleText);
-                    cell = row.createCell(2);
-                    cell.setCellValue(accum);
-                    cell.setCellStyle(styleSummary);
+                    cell.setCellStyle(styleEntry);
                 }
             }
             if (!isIncome(subtype)) {
@@ -229,7 +193,7 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
         row = sheet.createRow(rowno++);
         cell = row.createCell(0);
         if (grandtotal[0] > grandtotal[1]) {
-            cell.setCellValue(translate.getProperty(prefix+"surplus", "surplus"));
+            cell.setCellValue(translate.getProperty(prefix+"deficit", "deficit"));
             cell.setCellStyle(styleBoldText);
             cell = row.createCell(1);
             cell.setCellValue(grandtotal[0]-grandtotal[1]);
@@ -239,7 +203,7 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
             cell.setCellStyle(styleText);
         }
         else {
-            cell.setCellValue(translate.getProperty(prefix+"deficit", "deficit"));
+            cell.setCellValue(translate.getProperty(prefix+"surplus", "surplus"));
             cell.setCellStyle(styleBoldText);
             cell = row.createCell(1);
             cell.setCellValue("");
@@ -289,8 +253,6 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
                 // obj is in fact Account
                 String code= (String)obj.get("code"); 
                 size++;
-//                logger.log(Level.INFO, "{0} : {1}",
-//                new Object[] {code, totals.get(code)});
             }
             Account summary = mongoDao.getAccountByCode(subtype+"0");
             row = sheet.createRow(rowno++);
@@ -400,6 +362,26 @@ public class MonthlyReportTask implements Runnable, java.io.Serializable {
         }
         // print how much mortgage principal was repaid
         //accounts=this.getAccountsLike("231"); // Bank loan for mortgage
+        Account summary = mongoDao.getAccountByCode("231");
+//        if (!accounts.isEmpty()) {
+//            accounts = mongoDao.getAccountsBelow("23");
+            rowno+=2;
+            row = sheet.createRow(rowno++);
+            cell = row.createCell(0);
+            cell.setCellStyle(styleBoldText);
+            cell1 = row.createCell(1);
+            cell.setCellValue(translate.getProperty(prefix+"mortgage"));
+            cell1.setCellStyle(styleCheckSum);
+            Number opening;// = 0.0;
+            try {
+                Object o = mongoDao.getConfig("opening");
+                DBObject config = (DBObject)o;
+                opening = ((Number)config.get("231")).doubleValue();
+            }
+            catch (Exception ex) {
+                return false;
+            }
+            cell1.setCellValue(opening.doubleValue() - totals.get("231"));//637106.57-a.getTotal());
         return true;
     }
     

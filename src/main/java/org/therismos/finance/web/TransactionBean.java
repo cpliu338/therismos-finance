@@ -1,6 +1,7 @@
 package org.therismos.finance.web;
 
 import com.google.gson.Gson;
+import com.mongodb.DBObject;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -49,6 +50,7 @@ public class TransactionBean implements java.io.Serializable {
     }
     
     public String refresh() {
+        if (task==null) return null;
         String err = task.getError();
         if (err != null) {
             FacesMessage msg = new FacesMessage(err);
