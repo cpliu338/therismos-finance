@@ -1,12 +1,6 @@
 package org.therismos.finance.web;
 
-import com.google.gson.Gson;
-import com.mongodb.DBObject;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.therismos.finance.model.Transaction;
@@ -19,7 +13,6 @@ import org.therismos.finance.service.RemoteServer;
  *
  * @author cpliu
  */
-//@javax.faces.bean.ViewScoped
 @javax.inject.Named
 @javax.enterprise.context.ApplicationScoped
 public class TransactionBean implements java.io.Serializable {

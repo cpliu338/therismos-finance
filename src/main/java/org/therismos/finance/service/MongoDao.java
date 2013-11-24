@@ -26,11 +26,24 @@ public class MongoDao implements java.io.Serializable {
         results = new ArrayList<Account>();
     }
     
+    public WriteResult saveCheques(String yrmon, DBObject o) {
+        return db.getCollection("cheques").insert(new BasicDBObject(yrmon, o));
+    }
+    
+    public DBCollection getCheques() {
+        return db.getCollection("cheques");
+    }
+    
+    @javax.annotation.PreDestroy
+    public void cleanup() {
+        if (mongoClient != null) mongoClient.close();
+        mongoClient = null;
+    }
+    
     @javax.annotation.PostConstruct
     public void init() {
         results.clear();
         try {
-//            mongoClient = new MongoClient();
             mongoClient = new MongoClient("ds043358.mongolab.com", 43358);
             db = mongoClient.getDB("therismos");
             auth = db.authenticate("therismos","26629066".toCharArray());
