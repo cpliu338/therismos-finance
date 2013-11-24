@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Therismos Unpresented cheques</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p><h:outputText id="status" value="#{chequeBean.status}"/></p>
+            <p>Year-month<h:inputText id="yrmon" value="#{chequeBean.month}"/></p>
+            <h:commandButton action="#{chequeBean.download}" value="Update from server">
+                <f:ajax execute="yrmon" render="status"/>
+            </h:commandButton>
+        </h:form>  
+    </h:body>
+</html>
+
