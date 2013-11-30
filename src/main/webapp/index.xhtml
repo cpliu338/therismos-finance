@@ -5,63 +5,33 @@
    xmlns:h="http://java.sun.com/jsf/html"
    template="/WEB-INF/templates/default.xhtml">
    <ui:define name="content">
-      <h1>Welcome to JBoss AS 7!</h1>
-
-      <p>You have successfully deployed a Java EE 6 web application on JBoss AS 7.</p>
+       <h1>Therismos Index - <h:outputText value="#{userBean.user}"/></h1>
 
       <h:form id="reg">
-         <h2>Register (Bean Validation example)</h2>
-         <p>Enforces annotation-based constraints defined on the model class.</p>
-         <h:panelGrid columns="3" columnClasses="titleCell">
+         <h2>Login</h2>
+         <h:panelGrid columns="2" columnClasses="titleCell">
             <h:outputLabel for="name" value="Name:"/>
-            <h:inputText id="name" value="#{newMember.name}" />
-            <h:message for="name" errorClass="invalid"/>
+            <h:inputText id="name" value="#{userBean.user}" />
 
-            <h:outputLabel for="email" value="Email:"/>
-            <h:inputText id="email" value="#{newMember.email}"/>
-            <h:message for="email" errorClass="invalid"/>
+            <h:outputLabel for="pwd" value="Password:"/>
+            <h:inputText id="pwd" value="#{userBean.password}"/>
 
-            <h:outputLabel for="phoneNumber" value="Phone #:"/>
-            <h:inputText id="phoneNumber" value="#{newMember.phoneNumber}"/>
-            <h:message for="phoneNumber" errorClass="invalid"/>
          </h:panelGrid>
 
-         <p>
-            <h:panelGrid columns="2">
-               <h:commandButton id="register" action="#{memberRegistration.register}" value="Register"/>
-               <h:messages styleClass="messages" errorClass="invalid" infoClass="valid" warnClass="warning"
-                           globalOnly="true"/>
-            </h:panelGrid>
+         <p><h:commandButton value="login" action="#{userBean.authenticate()}"/>
          </p>
       </h:form>
-      <h2>Members</h2>
-      <h:panelGroup rendered="#{empty members}">
-         <em>No registered members.</em>
+      <h:panelGroup rendered="#{userBean.authenticated}">
+      <h2>Actions</h2>
+        <ul>
+            <li><a href="accounts.jsf">Accounts</a></li>
+            <li><a href="transactions.jsf">Transactions</a></li>
+        </ul>
       </h:panelGroup>
-      <h:dataTable var="_member" value="#{members}" rendered="#{not empty members}">
-         <h:column>
-            <f:facet name="header">Id</f:facet>
-                #{_member.id}
-            </h:column>
-         <h:column>
-            <f:facet name="header">Name</f:facet>
-                #{_member.name}
-            </h:column>
-         <h:column>
-            <f:facet name="header">Email</f:facet>
-                #{_member.email}
-            </h:column>
-         <h:column>
-            <f:facet name="header">Phone #</f:facet>
-                #{_member.phoneNumber}
-            </h:column>
-         <h:column>
-            <f:facet name="header">REST URL</f:facet>
-            <a href="#{request.contextPath}/rest/members/#{_member.id}">/rest/members/#{_member.id}</a>
-         </h:column>
-         <f:facet name="footer">
-            REST URL for all members: <a href="#{request.contextPath}/rest/members">/rest/members</a>
-         </f:facet>
-      </h:dataTable>
+       <dl>
+           <dt>Hashed <h:outputText value="#{userBean.password}"/> with SHA-1 Base64</dt>
+           <dd><h:outputText value="#{userBean.hashedPassword}"/></dd>
+       </dl>
+       <h:messages/>
    </ui:define>
 </ui:composition>

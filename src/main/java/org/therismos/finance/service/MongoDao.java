@@ -30,6 +30,10 @@ public class MongoDao implements java.io.Serializable {
         return db.getCollection("cheques").insert(new BasicDBObject(yrmon, o));
     }
     
+    public boolean authenticate(String user, String hashedpwd) {
+        return null != db.getCollection("users").findOne(new BasicDBObject("name",user).append("password",hashedpwd));
+    }
+    
     public DBCollection getCheques() {
         return db.getCollection("cheques");
     }
